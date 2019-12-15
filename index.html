@@ -1,140 +1,174 @@
 <html>
 
 <head>
-  <meta charset="utf-8">
-  <style>
-    body {
-      height: 2000px;
-      /* the tooltip should work after page scroll too */
-    }
+	<meta charset="utf-8" />
+	<style>
+		body {
+			height: 2000px;
+			/* the tooltip should work after page scroll too */
+		}
 
-    .tooltip {
-      position: fixed;
-      z-index: 100;
+		.tooltip {
+			position: fixed;
+			z-index: 100;
+			padding: 10px 20px;
+			border: 1px solid #b3c9ce;
+			border-radius: 4px;
+			text-align: center;
+			font: italic 14px/1.3 sans-serif;
+			color: #333;
+			background: #fff;
+			box-shadow: 3px 3px 3px rgba(0, 0, 0, 0.3);
+		}
 
-      padding: 10px 20px;
+		#house {
+			margin-top: 50px;
+			width: 400px;
+			border: 1px solid brown;
+		}
 
-      border: 1px solid #b3c9ce;
-      border-radius: 4px;
-      text-align: center;
-      font: italic 14px/1.3 sans-serif;
-      color: #333;
-      background: #fff;
-      box-shadow: 3px 3px 3px rgba(0, 0, 0, .3);
-    }
+		#roof {
+			width: 0;
+			height: 0;
+			border-left: 200px solid transparent;
+			border-right: 200px solid transparent;
+			border-bottom: 20px solid brown;
+			margin-top: -20px;
+		}
 
-    #house {
-      margin-top: 50px;
-      width: 400px;
-      border: 1px solid brown;
-    }
-
-    #roof {
-      width: 0;
-      height: 0;
-      border-left: 200px solid transparent;
-      border-right: 200px solid transparent;
-      border-bottom: 20px solid brown;
-      margin-top: -20px;
-    }
-
-    p {
-      text-align: justify;
-      margin: 10px 3px;
-    }
-  </style>
+		p,
+		h3,
+		ul {
+			text-align: justify;
+			margin: 20px;
+		}
+	</style>
 </head>
 
 <body>
+	<div data-tooltip="Here is the house interior" id="house">
+		<div data-tooltip="Here is the roof" id="roof"></div>
 
+		<h3>The object-oriented paradigm has several principles:</h3>
 
-  <div data-tooltip="Here is the house interior" id="house">
-    <div data-tooltip="Here is the roof" id="roof"></div>
+		<ul>
+			<li>
+				Data is structured in the form of objects, each of which has a certain
+				type, that is, it belongs to some class.
+			</li>
+			<li>
+				Classes are the result of formalizing the problem being solved,
+				highlighting its main aspects.
+			</li>
+			<li>
+				The logic of work with information related to it is encapsulated
+				inside an object.
+			</li>
+			<li>
+				Objects in the program interact with each other, exchange requests and
+				responses.
+			</li>
+			<li>
+				Moreover, objects of the same type similarly respond to the same
+				requests.
+			</li>
+			<li>
+				Objects can be organized with more complex structures, for example,
+				include other objects or inherit from one or more objects. 
+        <a href="http://xahlee.info/comp/Alan_Kay_on_object_oriented_programing" target="_blank"
+					data-tooltip="Read on…">Hover over me</a>
+			</li>
+		</ul>
+	</div>
 
-    <p>Once upon a time there was a mother pig who had three little pigs.</p>
-
-    <p>The three little pigs grew so big that their mother said to them, "You are too big to live here any longer. You must go and build houses for yourselves. But take care that the wolf does not catch you."
-
-    <p>The three little pigs set off. "We will take care that the wolf does not catch us," they said.</p>
-
-    <p>Soon they met a man. <a href="https://en.wikipedia.org/wiki/The_Three_Little_Pigs" data-tooltip="Read on…">Hover over me</a></p>
-
-  </div>
-<script>
-    function ToolTip(elem) {
-        var isIn = false,
-            timerId,
-            fromX,
-            fromY,
-            x,
-            y;
+	<script>
+		function ToolTip(elem) {
+        let isIn = false,
+          timerId,
+          fromX,
+          fromY,
+          x,
+          y;
 
         function move(e) {
-            x = e.clientX;
-            y = e.clientY;
+          x = e.clientX;
+          y = e.clientY;
         }
 
         function show(t) {
-            elem.innerHTML = t.getAttribute("data-tooltip");
-            document.body.appendChild(elem);
-            var tX = t.getBoundingClientRect().left,
-                tY = t.getBoundingClientRect().top,
-                tW = t.getBoundingClientRect().width,
-                tH = t.getBoundingClientRect().height,
-                toolW = elem.getBoundingClientRect().width,
-                toolH = elem.getBoundingClientRect().height;
-            elem.style.top = tY > (toolH + 5)? (tY - toolH - 5) + "px" : (tY + tH + 5) + "px";
-            elem.style.left = tX < (toolW - tW)/2 ? 0 : (tX + tW/2 - toolW/2) + "px";
+          elem.innerHTML = t.getAttribute('data-tooltip');
+          document.body.appendChild(elem);
+          let tX = t.getBoundingClientRect().left,
+            tY = t.getBoundingClientRect().top,
+            tW = t.getBoundingClientRect().width,
+            tH = t.getBoundingClientRect().height,
+            toolW = elem.getBoundingClientRect().width,
+            toolH = elem.getBoundingClientRect().height;
+          elem.style.top =
+            tY > toolH + 5 ? tY - toolH - 5 + 'px' : tY + tH + 5 + 'px';
+          elem.style.left =
+            tX < (toolW - tW) / 2 ? 0 : tX + tW / 2 - toolW / 2 + 'px';
         }
 
         function delToolTip(e) {
-            var t = this;
-            var rt = e.relatedTarget;
-            while (rt && rt !== document.documentElement && !rt.hasAttribute("data-tooltip")){
-                rt = rt.parentNode;
-            }
-            if(t === rt) return;
-            isIn = false;
-            if(document.getElementById("tooltip"))document.body.removeChild(elem);
-            t.removeEventListener("mousemove", move);
-            t.removeEventListener("mouseout", delToolTip);
-            clearInterval(timerId);
-            timerId = undefined;
+          let t = this,
+            rt = e.relatedTarget;
+          while (
+            rt &&
+            rt !== document.documentElement &&
+            !rt.hasAttribute('data-tooltip')
+          ) {
+            rt = rt.parentNode;
+          }
+          if (t === rt) return;
+          isIn = false;
+          if (document.getElementById('tooltip'))
+            document.body.removeChild(elem);
+          t.removeEventListener('mousemove', move);
+          t.removeEventListener('mouseout', delToolTip);
+          clearInterval(timerId);
+          timerId = undefined;
         }
 
-        this.showToolTip = function () {
-            document.addEventListener("mouseover", function (e) {
-                var t = e.target;
-                while (!t.hasAttribute("data-tooltip") && t !== document.documentElement) {
-                    t = t.parentNode;
-                }
-                if(t === document.documentElement || isIn) return;
-                isIn = true;
-                fromX = e.clientX;
-                fromY = e.clientY;
-                t.addEventListener("mousemove", move);
-                t.addEventListener("mouseout", delToolTip);
-                if(timerId) return;
-                timerId = setInterval(function () {
-                    var d = Math.floor(Math.sqrt(Math.pow((x - fromX), 2) + Math.pow((y - fromY), 2)));
-                    fromX = x;
-                    fromY = y;
-                    if (d > 50) return;
-                    show(t);
-                    clearInterval(timerId);
-                    timerId = undefined;
-                }, 500);
-            });
+        this.showToolTip = function() {
+          document.addEventListener('mouseover', e => {
+            let t = e.target;
+            while (
+              !t.hasAttribute('data-tooltip') &&
+              t !== document.documentElement
+            ) {
+              t = t.parentNode;
+            }
+            if (t === document.documentElement || isIn) return;
+            isIn = true;
+            fromX = e.clientX;
+            fromY = e.clientY;
+            t.addEventListener('mousemove', move);
+            t.addEventListener('mouseout', delToolTip);
+            if (timerId) return;
+            timerId = setInterval(() => {
+              let d = Math.floor(
+                Math.sqrt(Math.pow(x - fromX, 2) + Math.pow(y - fromY, 2))
+              );
+              fromX = x;
+              fromY = y;
+              if (d > 50) return;
+              show(t);
+              clearInterval(timerId);
+              timerId = undefined;
+            }, 500);
+          });
         };
-    }
+      }
 
-    document.addEventListener("DOMContentLoaded", function () {
-        var tt = document.createElement("div");
-        tt.classList.add("tooltip");
-        tt.id = "tooltip";
-        var toolTip = new ToolTip(tt);
-        toolTip.showToolTip();
-    });
-</script>
+      document.addEventListener('DOMContentLoaded', () => {
+        ((elm, name) => {
+          elm.classList.add(name);
+          elm.id = name;
+          return new ToolTip(elm);
+        })(document.createElement('div'), 'tooltip').showToolTip();
+      });
+	</script>
 </body>
+
 </html>
